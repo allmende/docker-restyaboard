@@ -1,0 +1,45 @@
+version: '2'
+services:
+  data:
+    image: busybox
+    volumes:
+      - /usr/share/elasticsearch/data
+      - /var/lib/postgresql/data
+      - /usr/share/nginx/html/media
+    command: echo OK
+
+  elasticsearch:
+    image: elasticsearch
+    volumes_from:
+      - data
+    restart: always
+
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: something
+    volumes_from:
+      - data
+    restart: always
+
+  restyaboard:
+    build: .
+    links:
+      - elasticsearch:elasticsearch
+      - postgres:postgres
+    expose:
+      - '80'
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASS: something
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+    volumes_from:
+      - data
+    restart: always
+
+networks:
+  default:
+    external:
+      name: nginx_default

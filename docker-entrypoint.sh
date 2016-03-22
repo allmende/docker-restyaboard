@@ -6,13 +6,13 @@ if [ "$1" = 'start' ]; then
   # config
   sed -i "s/^.*'R_DB_NAME'.*$/define('R_DB_NAME', 'restyaboard');/g" \
     /usr/share/nginx/html/server/php/config.inc.php
-  sed -i "s/^.*'R_DB_USER'.*$/define('R_DB_USER', '${POSTGRES_ENV_POSTGRES_USER}');/g" \
+  sed -i "s/^.*'R_DB_USER'.*$/define('R_DB_USER', '${POSTGRES_USER}');/g" \
     /usr/share/nginx/html/server/php/config.inc.php
-  sed -i "s/^.*'R_DB_PASSWORD'.*$/define('R_DB_PASSWORD', '${POSTGRES_ENV_POSTGRES_PASSWORD}');/g" \
+  sed -i "s/^.*'R_DB_PASSWORD'.*$/define('R_DB_PASSWORD', '${POSTGRES_PASS}');/g" \
     /usr/share/nginx/html/server/php/config.inc.php
-  sed -i "s/^.*'R_DB_HOST'.*$/define('R_DB_HOST', '${POSTGRES_PORT_5432_TCP_ADDR}');/g" \
+  sed -i "s/^.*'R_DB_HOST'.*$/define('R_DB_HOST', '${POSTGRES_HOST}');/g" \
     /usr/share/nginx/html/server/php/config.inc.php
-  sed -i "s/^.*'R_DB_PORT'.*$/define('R_DB_PORT', '${POSTGRES_PORT_5432_TCP_PORT}');/g" \
+  sed -i "s/^.*'R_DB_PORT'.*$/define('R_DB_PORT', '${POSTGRES_PORT}');/g" \
     /usr/share/nginx/html/server/php/config.inc.php
 
   # cron shell
@@ -30,10 +30,10 @@ if [ "$1" = 'start' ]; then
   chmod -R go+w /usr/share/nginx/html/client/img
 
   # init db
-  export PGHOST=$POSTGRES_PORT_5432_TCP_ADDR
-  export PGPORT=$POSTGRES_PORT_5432_TCP_PORT
-  export PGUSER=$POSTGRES_ENV_POSTGRES_USER
-  export PGPASSWORD=$POSTGRES_ENV_POSTGRES_PASSWORD
+  export PGHOST=$POSTGRES_HOST
+  export PGPORT=$POSTGRES_PORT
+  export PGUSER=$POSTGRES_USER
+  export PGPASSWORD=$POSTGRES_PASS
   set +e
   while :
   do
